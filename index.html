@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সুন্দর ওয়েবসাইট</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK যোগ করা হয়েছে -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { height: 100%; overflow: hidden; }
+        #bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 370px; height: 700px;
+            background: url('https://i.ibb.co.com/bRFDtrsy/images-5.jpg') center/cover no-repeat;
+            z-index: -1;
+        }
+        .container {
+            position: relative;
+            width: 370px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .logo {
+            position: absolute;
+            top: 60px;
+            width: 240px;
+            height: auto;
+        }
+        .register {
+            margin-top: -20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0 0 10px rgba(255,255,255,0.7);
+        }
+        .login-text {
+            margin-top: 16px;
+            font-size: 0.7rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* Loging Button with GOLD Underline */
+        .loging-btn {
+            display: inline-block;
+            padding: 2px 8px;
+            color: gold;
+            font-size: 0.7rem;
+            margin-left: -10px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .loging-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75%;
+            height: 2px;
+            background: gold;
+            border-radius: 1px;
+            opacity: 0.9;
+            transition: width 0.3s ease, opacity 0.3s ease;
+        }
+        .loging-btn:hover {
+            background: #e60000;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 0, 0, 0.4);
+        }
+        .loging-btn:hover::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        /* Form Container - Same for both pages */
+        .form-container {
+            margin-top: 20px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-box {
+            position: relative;
+            background: #0a2d2e;
+            border-radius: 10px;
+            padding: 10px 50px 9px 40px;
+            display: flex;
+            align-items: center;
+        }
+        .input-box i {
+            position: absolute;
+            left: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        .input-box i.active {
+            color: gold !important;
+        }
+        .input-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffe4e1;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        .input-box input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .error-message {
+            position: absolute;
+            left: 0;
+            bottom: -18px;
+            font-size: 0.65rem;
+            color: #ff4d4d;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .terms-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 280px;
+        }
+        .terms-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .terms-checkbox-permanent {
+            width: 18px;
+            height: 18px;
+            border: 2px solid gold;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 7px;
+            position: relative;
+            background: gold;
+        }
+        .terms-checkbox-permanent::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .terms-checkbox {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0;
+            margin-top: 3px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            background: transparent;
+        }
+        .terms-checkbox:checked {
+            border-color: gold;
+            background: gold;
+        }
+        .terms-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .terms-text {
+            font-size: 0.65rem;
+            color: #ccc;
+            line-height: 1.4;
+            text-align: left;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        /* Register Button - শুধু Register Page */
+        .register-btn {
+            margin-top: 20px;
+            width: 280px;
+            padding: 7px 0;
+            background: gold;
+            color: black;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .register-btn:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Black Page */
+        .black-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 370px;
+            height: 700px;
+            background: url('https://i.ibb.co.com/bRFDtrsy/images-5.jpg') center/cover no-repeat;
+            z-index: 9999;
+        }
+        .black-page.active {
+            display: block;
+        }
+
+        .loging-text {
+            margin-top: -200px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: gold;
+            text-align: center;
+        }
+
+        /* No account text */
+        .no-account-text {
+            margin-top: 15px;
+            font-size: 0.7rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .register-link-btn {
+            display: inline-block;
+            padding: 2px 8px;
+            color: gold;
+            font-size: 0.7rem;
+            margin-left: -10px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .register-link-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75%;
+            height: 2px;
+            background: gold;
+            border-radius: 1px;
+            opacity: 0.9;
+            transition: width 0.3s ease, opacity 0.3s ease;
+        }
+        .register-link-btn:hover {
+            background: #e6c200;
+            color: black;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+        .register-link-btn:hover::after {
+            width: 100%;
+            opacity: 1;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 40px;
+            height: 40px;
+            background: gold;
+            color: black;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 10000;
+        }
+        .back-btn:hover {
+            background: #e6c200;
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Login Form on Black Page */
+        .login-form-container {
+            margin-top: 25px;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Remember & Forget Password - ALADA CONTROL */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0 18px 0;
+            margin-top:17px;
+            width: 280px;
+            font-size: 0.65rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .remember-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid gold;
+            border-radius: 50%;
+            position: relative;
+            background: transparent;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .remember-checkbox:checked {
+            background: gold;
+        }
+
+        .remember-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .forget-password {
+            color: gold;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .forget-password:hover {
+            opacity: 0.8;
+        }
+
+        /* Login Button - শুধু Login Page */
+        .login-btn {
+            width: 280px;
+            padding: 7px 0;
+            background: gold;
+            color: black;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-top: 0 !important;
+        }
+        .login-btn:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="bg"></div>
+    <div class="container">
+        <img src="https://i.ibb.co.com/27LyxyRg/flamingtext-com-391110589.png" alt="Logo" class="logo">
+        <div class="register">Register</div>
+        
+        <!-- Loging Button -->
+        <div class="login-text">
+            Already have an account? 
+            <span class="loging-btn">Loging</span>
+        </div>
+
+        <div class="form-container">
+            <!-- User Name -->
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="User name (min 6 chars)" id="username" 
+                           oninput="validateField('username')" 
+                           onfocus="highlightIcon(this)" 
+                           onblur="unhighlightIcon(this)">
+                </div>
+                <div class="error-message">*কমপক্ষে ৬ অক্ষরের ইউজারনেম দিন</div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <i class="fas fa-phone"></i>
+                    <input type="text" placeholder="Phone number (11 digits)" id="phone" maxlength="11" 
+                           oninput="validateField('phone')" 
+                           onfocus="highlightIcon(this)" 
+                           onblur="unhighlightIcon(this)">
+                </div>
+                <div class="error-message">*অবশ্যই ১১ ডিজিটের নাম্বার হতে হবে</div>
+            </div>
+
+            <!-- Password -->
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password (min 6 chars)" id="password" 
+                           oninput="validateField('password')" 
+                           onfocus="highlightIcon(this)" 
+                           onblur="unhighlightIcon(this)">
+                </div>
+                <div class="error-message">*কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন</div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-wrapper">
+                <div class="input-box">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Confirm password" id="confirmPassword" 
+                           oninput="validateField('confirmPassword')" 
+                           onfocus="highlightIcon(this)" 
+                           onblur="unhighlightIcon(this)">
+                </div>
+                <div class="error-message">*পাসওয়ার্ড মিলছে না</div>
+            </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms-container">
+            <div class="terms-item">
+                <div class="terms-checkbox-permanent"></div>
+                <div class="terms-text">
+                    I am over 18 years of age and have read and accepted Terms & Conditions, Privacy Policy & Betting Rules as published on the site.
+                </div>
+            </div>
+
+            <div class="terms-item">
+                <input type="checkbox" class="terms-checkbox" id="promo-check">
+                <label for="promo-check" class="terms-text">
+                    would like to receive details of special offers, free bets and other promotions.
+                </label>
+            </div>
+        </div>
+
+        <!-- Register Button -->
+        <div class="register-btn" onclick="registerUser()">Register</div>
+    </div>
+
+    <!-- Black Page -->
+    <div class="black-page" id="blackPage">
+        <!-- Back Button -->
+        <div class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <div class="container">
+            <img src="https://i.ibb.co.com/27LyxyRg/flamingtext-com-391110589.png" alt="Logo" class="logo">
+            <div class="loging-text">Loging</div>
+
+            <!-- No account? Register Button -->
+            <div class="no-account-text">
+                No account yet? 
+                <span class="register-link-btn">Register</span>
+            </div>
+
+            <!-- Login Form -->
+            <div class="login-form-container">
+                <!-- Phone Number -->
+                <div class="input-wrapper">
+                    <div class="input-box">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" placeholder="Phone number (11 digits)" id="loginPhone" maxlength="11" 
+                               onfocus="highlightIcon(this)" 
+                               onblur="unhighlightIcon(this)">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="input-wrapper">
+                    <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" id="loginPassword" 
+                               onfocus="highlightIcon(this)" 
+                               onblur="unhighlightIcon(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remember & Forget Password -->
+            <div class="login-options">
+                <label class="remember-me">
+                    <input type="checkbox" class="remember-checkbox" id="rememberMe">
+                    <span>Remember</span>
+                </label>
+                <a href="https://t.me/tu_telegram_id" target="_blank" class="forget-password">Forget password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <div class="login-btn" onclick="loginUser()">Login</div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3kgTqwWnxGoM-rAammwjsXIkP6Wa4iEY",
+            authDomain: "avaitor-67ceb.firebaseapp.com",
+            projectId: "avaitor-67ceb",
+            storageBucket: "avaitor-67ceb.firebasestorage.app",
+            messagingSenderId: "729167805060",
+            appId: "1:729167805060:web:416b149a6704a2bf8620d1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // আইকন হাইলাইট
+        function highlightIcon(input) {
+            const icon = input.parentElement.querySelector('i');
+            icon.classList.add('active');
+        }
+
+        function unhighlightIcon(input) {
+            const icon = input.parentElement.querySelector('i');
+            icon.classList.remove('active');
+        }
+
+        // Real-time validation for Register
+        function validateField(fieldId) {
+            const value = document.getElementById(fieldId).value.trim();
+            const errorElement = document.getElementById(fieldId).parentElement.parentElement.querySelector('.error-message');
+
+            let isValid = true;
+            let message = '';
+
+            switch (fieldId) {
+                case 'username':
+                    if (!value) {
+                        message = '*ইউজারনেম দিন';
+                        isValid = false;
+                    } else if (value.length < 6) {
+                        message = '*কমপক্ষে ৬ অক্ষরের ইউজারনেম দিন';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'phone':
+                    if (!value) {
+                        message = '*দয়া করে ১১ ডিজিটের নাম্বার লিখুন';
+                        isValid = false;
+                    } else if (!/^\d{11}$/.test(value)) {
+                        message = '*অবশ্যই ১১ ডিজিটের নাম্বার হতে হবে';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'password':
+                    if (!value) {
+                        message = '*পাসওয়ার্ড দিন';
+                        isValid = false;
+                    } else if (value.length < 6) {
+                        message = '*কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'confirmPassword':
+                    const password = document.getElementById('password').value;
+                    if (!value) {
+                        message = '*কনফার্ম পাসওয়ার্ড দিন';
+                        isValid = false;
+                    } else if (password && value !== password) {
+                        message = '*পাসওয়ার্ড মিলছে না';
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            if (!isValid) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            } else {
+                errorElement.classList.remove('show');
+            }
+        }
+
+        // Register User
+        function registerUser() {
+            validateField('username');
+            validateField('phone');
+            validateField('password');
+            validateField('confirmPassword');
+
+            const errors = document.querySelectorAll('.error-message.show');
+            if (errors.length > 0) return;
+
+            const username = document.getElementById('username').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const email = phone + "@avaitor.com";
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((cred) => {
+                    return db.collection('users').doc(cred.user.uid).set({
+                        username, phone, email, balance: 0,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    alert("Registration Successful!");
+                    document.getElementById('blackPage').classList.remove('active');
+                })
+                .catch(err => alert("Error: " + err.message));
+        }
+
+        // Login User
+        function loginUser() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!/^\d{11}$/.test(phone) || password.length < 6) {
+                alert("Invalid phone or password!");
+                return;
+            }
+
+            const email = phone + "@avaitor.com";
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => window.location.href = "home.html")
+                .catch(err => alert("Login Failed: " + err.message));
+        }
+
+        // Page Switch
+        document.querySelector('.loging-btn').onclick = () => document.getElementById('blackPage').classList.add('active');
+        document.querySelector('.back-btn').onclick = () => document.getElementById('blackPage').classList.remove('active');
+        document.querySelector('.register-link-btn').onclick = () => document.getElementById('blackPage').classList.remove('active');
+    </script>
+</body>
+</html>

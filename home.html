@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ব্যাকগ্রাউন্ড */
+        #bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 370px;
+            height: 100%;
+            background: url('https://i.ibb.co.com/bRqr3T40/IMG-20251113-061329.jpg') center/cover no-repeat;
+            z-index: -1;
+        }
+
+        /* টপ ব্যানার */
+        .top-banner {
+            position: sticky;
+            top: 0;
+            width: 370px;
+            height: 40px;
+            background: #0a2d2e;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 10px;
+            gap: 95px;
+        }
+
+        .logo-container {
+            width: 180px;
+            height: 100px;
+            margin-left: -12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .balance-box {
+            width: 75px;
+            height: 30px;
+            background: transparent;
+            border: 3px solid gold;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .balance-box i {
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: gold;
+        }
+
+        /* কন্টেন্ট */
+        .content {
+            width: 370px;
+            margin: 0 auto;
+            padding-top: 10px;
+            padding-bottom: 80px;
+        }
+
+        /* অ্যানাউন্সমেন্ট */
+        .thin-round-box {
+            margin: 10px auto;
+            width: 340px;
+            height: 20px;
+            background: #0a2d2e;
+            border: 1px solid #0a2;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .sliding-text {
+            display: inline-block;
+            white-space: nowrap;
+            color: gold;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding-left: 100%;
+            animation: slide 12s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* বড় গোল্ড বক্স */
+        .large-gold-box {
+            margin: 10px auto;
+            width: 340px;
+            height: 170px;
+            background: rgba(10, 45, 46, 0.85);
+            border: 1px solid gold;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .image-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider-image {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slider-image.active {
+            opacity: 1;
+        }
+
+        /* উড়ন্ত PLAN */
+        .flying-plan {
+            position: fixed;
+            width: 100px;
+            height: auto;
+            z-index: 5;
+            pointer-events: none;
+            animation: flyPath 8s ease-in-out infinite;
+        }
+
+        .flying-plan img {
+            width: 100%;
+            height: auto;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .flying-plan .img1 {
+            opacity: 1;
+            animation: showImg1 8s step-end infinite;
+        }
+
+        .flying-plan .img2 {
+            opacity: 0;
+            animation: showImg2 8s step-end infinite;
+        }
+
+        @keyframes showImg1 {
+            0%, 35% { opacity: 1; }
+            35.1%, 100% { opacity: 0; }
+        }
+
+        @keyframes showImg2 {
+            0%, 35% { opacity: 0; }
+            35.1%, 100% { opacity: 1; }
+        }
+
+        @keyframes flyPath {
+            0% {
+                left: -220px;
+                top: 45%;
+                transform: scale(0.8);
+            }
+            30% {
+                left: 450px;
+                top: 45%;
+                transform: scale(1);
+            }
+            35% {
+                left: 350px;
+                top: 45%;
+                transform: scale(1);
+            }
+            65% {
+                left: -200px;
+                top: 45%;
+                transform: scale(0.8);
+            }
+            70% {
+                left: -200px;
+                top: 45%;
+                transform: scale(0.8);
+            }
+            100% {
+                left: -180px;
+                top: 45%;
+                transform: scale(0.8);
+            }
+        }
+
+        /* MOST GAMES */
+        .games-title {
+            margin: 10px 15px;
+            width: 340px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: left;
+            background: rgba(10, 45, 46, 0.7);
+            border-left: 4px solid gold;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        /* গেম কন্টেইনার */
+        .game-item {
+            margin: 10px 15px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .small-game-box {
+            width: 100px;
+: 100px;
+            height: 110px;
+            background: rgba(10, 45, 46, 0.9);
+            border: 1px solid #0a2;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .small-game-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 9px;
+            z-index: 1;
+        }
+
+        .small-game-box::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .small-game-box::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border-radius: 9px;
+            box-shadow: 0 0 15px rgba(255,215,0,0.6), 0 0 25px rgba(255,215,0,0.4), inset 0 0 20px rgba(255,215,0,0.2);
+            z-index: 3;
+            pointer-events: none;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 15px rgba(255,215,0,0.6), 0 0 25px rgba(255,215,0,0.4), inset 0 0 20px rgba(255,215,0,0.2); }
+            100% { box-shadow: 0 0 25px rgba(255,215,0,0.9), 0 0 40px rgba(255,215,0,0.7), inset 0 0 30px rgba(255,215,0,0.3); }
+        }
+
+        /* PLAY বাটন */
+        .play-button {
+            margin-top: 8px;
+            width: 80px;
+            height: 25px;
+            background: #00c8ff;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+            background: #00a8dd;
+            transform: translateY(-2px);
+        }
+
+        /* About বক্স */
+        .about-box {
+            margin: 20px 15px;
+            margin-top: 5px;
+            width: 340px;
+            background: rgba(10, 45, 46, 0.9);
+            border: 2px solid black;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            clear: both;
+        }
+
+        .about-box strong {
+            color: white;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 8px;
+            border-left: 4px solid gold;
+            padding-left: 10px;
+        }
+
+        .about-box p {
+            color: white;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        /* HELP LINE */
+        .help-section {
+            margin: 20px 15px;
+            text-align: center;
+            clear: both;
+        }
+
+        .help-title {
+            width: 340px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: left;
+            background: rgba(10, 45, 46, 0.7);
+            border-left: 4px solid gold;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-title i {
+            color: gold;
+        }
+
+        .live-chat-big-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #00c8ff;
+            color: gold;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .live-chat-big-btn:hover {
+            background: #00a8dd;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        .live-chat-big-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* নিচের মেনু বার */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 370px;
+            height: 60px;
+            background: #0a2d2e;
+            border-top: 1px solid gold;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 99;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 25%;
+            padding: 5px 0;
+        }
+
+        .nav-btn i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            color: gold;
+        }
+
+        .nav-btn.active,
+        .nav-btn:hover {
+            color: white;
+        }
+
+        .nav-btn.active i,
+        .nav-btn:hover i {
+            color: #00c8ff;
+            transform: scale(1.1);
+        }
+
+        /* রিফ্রেশ */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spinning {
+            animation: spin 1.5s ease-in-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="bg"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- টপ ব্যানার -->
+    <div class="top-banner">
+        <div class="logo-container">
+            <img src="https://i.ibb.co.com/27LyxyRg/flamingtext-com-391110589.png" alt="Logo">
+        </div>
+        <div class="balance-box">
+            <span id="balanceText">৳ 0.00</span>
+            <i class="fas fa-sync-alt" id="refreshIcon" onclick="refreshBalance()"></i>
+        </div>
+    </div>
+
+    <!-- কন্টেন্ট -->
+    <div class="content">
+
+        <!-- অ্যানাউন্সমেন্ট -->
+        <div class="thin-round-box">
+            <div class="sliding-text">
+                win and earn -সাইটে আপনাকে স্বাগতম
+            </div>
+        </div>
+
+        <!-- বড় স্লাইডার -->
+        <div class="large-gold-box">
+            <div class="image-slider">
+                <img src="https://i.ibb.co.com/7t5wtQvJ/images-2.jpg" class="slider-image active" alt="Slide 1">
+                <img src="https://i.ibb.co.com/NnGSBf23/images-8.jpg" class="slider-image" alt="Slide 2">
+                <img src="https://i.ibb.co.com/DHM0JGVj/images-7.jpg" class="slider-image" alt="Slide 3">
+                <img src="https://i.ibb.co.com/8DnB4zfj/IMG-20251114-021504.jpg" class="slider-image" alt="Slide 4">
+            </div>
+        </div>
+
+        <!-- উড়ন্ত PLAN -->
+        <div class="flying-plan">
+            <img src="https://i.ibb.co.com/n83qbP3N/IMG-20251114-040925-removebg-preview.png" class="img1" alt="Plan 1">
+            <img src="https://i.ibb.co.com/mV1JJs8Q/IMG-20251114-044751-removebg-preview.png" class="img2" alt="Plan 2">
+        </div>
+
+        <!-- MOST GAMES -->
+        <div class="games-title">
+            MOST GAMES :
+        </div>
+
+        <!-- ছোট বক্স + PLAY -->
+        <div class="game-item">
+            <div class="small-game-box">
+                <img src="https://i.ibb.co.com/SD46gryS/images-11.jpg" alt="Game 1">
+            </div>
+            <button class="play-button" onclick="window.location.href='games.html'">
+                PLAY
+            </button>
+        </div>
+
+        <!-- About -->
+        <div class="about-box">
+            <strong>About:</strong>
+            <p>
+                Win and earn website is operated by company. Under licences number GLH-CHKMTW06741772 issued to it and regulated by Game Services Provider N.V authorized by the government of curacao under licences number 486ZAJ
+            </p>
+        </div>
+
+        <!-- HELP LINE -->
+        <div class="help-section">
+            <div class="help-title">
+                <i class="fas fa-headset"></i>
+                <strong>HELP LINE :</strong>
+            </div>
+            <button class="live-chat-big-btn" onclick="window.open('https://t.me/YourSupportBot', '_blank')">
+                <i class="fab fa-telegram-plane"></i> LIVE CHAT
+            </button>
+        </div>
+
+    </div>
+
+    <!-- নিচের ৪টা বাটন -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-btn active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="deposit.html" class="nav-btn">
+            <i class="fas fa-plus-circle"></i>
+            <span>Deposit</span>
+        </a>
+        <a href="withdraw.html" class="nav-btn">
+            <i class="fas fa-minus-circle"></i>
+            <span>Withdraw</span>
+        </a>
+        <a href="profile.html" class="nav-btn">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script>
+        // Firebase Config (তোমারটা)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3kgTqwWnxGoM-rAammwjsXIkP6Wa4iEY",
+            authDomain: "avaitor-67ceb.firebaseapp.com",
+            projectId: "avaitor-67ceb",
+            storageBucket: "avaitor-67ceb.firebasestorage.app",
+            messagingSenderId: "729167805060",
+            appId: "1:729167805060:web:416b149a6704a2bf8620d1",
+            measurementId: "G-3W8CJGDZDS"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const balanceText = document.getElementById('balanceText');
+        const refreshIcon = document.getElementById('refreshIcon');
+
+        // Login Check
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                loadUserBalance(user.uid);
+                setupRealtimeBalance(user.uid);
+            } else {
+                window.location.href = "index.html"; // Login Page
+            }
+        });
+
+        // Load Balance
+        function loadUserBalance(uid) {
+            db.collection('users').doc(uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const balance = doc.data().balance || 0;
+                        balanceText.textContent = `৳ ${balance.toFixed(2)}`;
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error loading balance:", error);
+                });
+        }
+
+        // Real-time Balance Update
+        function setupRealtimeBalance(uid) {
+            db.collection('users').doc(uid).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const balance = doc.data().balance || 0;
+                    balanceText.textContent = `৳ ${balance.toFixed(2)}`;
+                }
+            });
+        }
+
+        // Refresh Balance
+        function refreshBalance() {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            refreshIcon.classList.remove('spinning');
+            void refreshIcon.offsetWidth;
+            refreshIcon.classList.add('spinning');
+
+            loadUserBalance(user.uid);
+            setTimeout(() => refreshIcon.classList.remove('spinning'), 1500);
+        }
+
+        // Image Slider
+        const images = document.querySelectorAll('.slider-image');
+        let currentIndex = 0;
+        function showNextImage() {
+            images[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add('active');
+        }
+        setInterval(showNextImage, 3000);
+    </script>
+</body>
+</html>
