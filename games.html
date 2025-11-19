@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aviator Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+    html,body { margin:0; padding:0; min-height:100vh; overflow-y:auto; background:#000; color:#fff; }
+    body { display:flex; flex-direction:column; }
+
+    /* Banner */
+    .banner { height:40px; background:#111; display:flex; align-items:center; justify-content:space-between; padding:0 20px; box-shadow:0 2px 10px rgba(0,0,0,0.2); }
+    .logo-img { height:28px; width:auto; }
+    .balance { font-size:15px; font-weight:800; }
+    .amount { color:#0f0; }
+    .currency { color:#666; }
+
+    /* History Bar */
+    .history-bar { height:30px; background:#111; color:#aaa; font-size:13px; display:flex; align-items:center; justify-content:flex-start; padding:0 20px; border-bottom:1px solid #333; position:relative; overflow:hidden; }
+    .history-content { flex:1; display:flex; align-items:center; white-space:nowrap; overflow:hidden; margin-right:40px; direction:rtl; }
+    .history-items-container { display:flex; gap:30px; overflow:hidden; flex-shrink:0; direction:ltr; transition:transform 0.4s ease; }
+    .history-icon { position:absolute; right:20px; top:50%; transform:translateY(-50%); z-index:10; cursor:pointer; background:#111; padding:0 5px; font-size:16px; }
+    .history-icon:hover { color:#fff; }
+
+    @keyframes zoomIn { 0% { transform:scale(0); opacity:0; } 70% { transform:scale(1.3); opacity:1; } 100% { transform:scale(1); } }
+    .history-item { display:inline-block; font-weight:900; animation: zoomIn 0.4s ease-out forwards; flex-shrink:0; }
+
+    /* Popup */
+    .history-popup { position:fixed; top:20%; left:50%; transform:translate(-50%,-50%) scale(0); width:320px; max-height:70vh; background:#111; border:2px solid #444; border-radius:16px; z-index:9999; overflow:hidden; box-shadow:0 0 30px rgba(0,0,0,0.5); transition:transform 0.3s ease; }
+    .history-popup.show { transform:translate(-50%,-50%) scale(1); }
+    .popup-header { padding:12px 16px; background:#222; color:#fff; font-weight:800; display:flex; justify-content:space-between; align-items:center; }
+    .close-popup { background:none; border:none; color:#aaa; font-size:20px; cursor:pointer; }
+    .popup-body { padding:16px; max-height:50vh; overflow-y:auto; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+    .popup-item { padding:6px 10px; border-radius:8px; font-weight:900; font-size:13px; min-width:60px; text-align:center; }
+    .low { background:#001a1a; color:#00ffff; border:1px solid #00ffff; }
+    .mid { background:#330000; color:#ff4444; border:1px solid #c80000; }
+    .high { background:#330019; color:#ff69b4; border:1px solid #ff69b4; }
+
+    /* Space Box */
+    .space-box { height:225px; position:relative; margin:2px -1px; background:linear-gradient(135deg,#000814,#001d3d); overflow:hidden; border:1px solid #444; border-radius:16px; box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+
+    /* PLANE - FAST & VISIBLE */
+    .plane { 
+      position: absolute; 
+      bottom: 3px; 
+      left: 2px; 
+      width: 115px; 
+      height: auto; 
+      z-index: 15; 
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .plane.visible { opacity: 1; }
+
+    .star { position:absolute; background:#e0f7fa; border-radius:50%; pointer-events:none; box-shadow:0 0 5px #fff; animation:zoomOut linear infinite; }
+    @keyframes zoomOut { 0%{transform:scale(0.2) translateY(0);opacity:0.8;} 100%{transform:scale(1.8) translateY(-220px);opacity:0;} }
+
+    .center-logo { position:absolute; top:35%; left:51%; transform:translate(-50%,-50%); width:180px; height:80px; border:4px solid #e74c3c; border-radius:10%; overflow:hidden; box-shadow:0 0 10px #e74c3c; z-index:9; animation:photoPulse 1s infinite; transition: opacity 0.6s ease, transform 0.6s ease; }
+    .center-logo.hide { opacity:0; transform:translate(-50%,-50%) scale(0.7); }
+    .center-logo img { width:100%; height:100%; object-fit:cover; margin-top:-9px; }
+    @keyframes photoPulse { 0%,100% { box-shadow:0 0 10px #e74c3c; } 30% { box-shadow:0 0 30px #ff0000; } }
+
+    .loading-container { position: absolute; bottom: 68px; left: 50%; transform: translateX(-50%); width: 220px; z-index: 9; opacity: 0; transition: opacity 0.5s ease; }
+    .loading-bar { width: 100%; height: 6px; border: 2px solid #e74c3c; border-radius: 10px; overflow: hidden; direction: rtl; }
+    .loading-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff4444, #ff0000); border-radius: 8px; box-shadow: 0 0 15px #ff0000; }
+    @keyframes loadingRightToLeft { 0% { width: 0%; } 100% { width: 100%; } }
+    .loading-text { text-align: center; margin-top: 8px; color: #e74c3c; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-shadow: 0 0 10px #ff0000; animation: textPulse 1.2s infinite; }
+    @keyframes textPulse { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
+    .show-loading .loading-container { opacity: 1; }
+
+    .flew-away { position: absolute; top: 20%; left: 50%; transform: translateX(-50%); font-size: 20px; font-weight: 300; color: white; z-index: 12; letter-spacing: 1px; white-space: nowrap; opacity: 0; transition: opacity 0.3s ease; }
+    .flew-away.show { opacity: 1; }
+
+    /* MULTIPLIER - CLEAR & BIG */
+    .multiplier { 
+      position: absolute; 
+      top: 50%; left: 50%; 
+      transform: translate(-50%, -50%); 
+      font-size: 70px; 
+      font-weight: 950; 
+      color: white; 
+      z-index: 11; 
+      letter-spacing: 1px; 
+      opacity: 0; 
+      transition: opacity 0.3s ease, color 0.2s ease;
+      text-shadow: 0 0 15px rgba(255,255,255,0.8);
+    }
+    .multiplier.show { opacity: 1; }
+    .multiplier.crashed { color: #ff0000; text-shadow: 0 0 20px #ff0000; }
+
+    .control-box { height:150px; background:#333; margin:0 1px 100px 2px; border-radius:14px; display:flex; flex-direction:column; align-items:center; position:relative; transition:height .3s; }
+    .control-box.auto-mode { height:185px; }
+    #controlBox2 { margin-top: -90px !important; z-index: 4; }
+    .underline { width:100%; height:1px; background:#000; margin:21px 0 5px; display:none; opacity:0; }
+    .control-box.auto-mode .underline { display:block; opacity:1; }
+    .auto-options { width:100%; display:flex; justify-content:space-between; gap:8px; margin-top:1px; opacity:0; pointer-events:none; padding:0 15px; font-size:12px; }
+    .control-box.auto-mode .auto-options { opacity:1; pointer-events:auto; }
+
+    .toggle-group { display:flex; align-items:center; gap:8px; }
+    .toggle-label { font-size:12px; font-weight:750; color:#666; }
+    .toggle-switch { width:32px; height:18px; background:#000; border-radius:50px; position:relative; cursor:pointer; transition:background .3s; }
+    .toggle-switch.active { background:red; }
+    .toggle-circle { width:14px; height:14px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; transition:left .3s; }
+    .toggle-switch.active .toggle-circle { left:16px; }
+
+    .cashout-box { background:#000; padding:1px 4px; border-radius:50px; display:flex; align-items:center; gap:6px; min-width:80px; justify-content:center; }
+    .cashout-input { background:transparent; border:none; color:#e0f7fa; font-size:14px; font-weight:700; text-align:center; width:50px; outline:none; }
+    .cashout-input:disabled { color:#888; pointer-events:none; }
+    .close-btn { width:15px; height:15px; border-radius:50%; background:#444; color:white; font-size:12px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+    .inner-button-box { background:#000; padding:4px 7px; border-radius:50px; margin-top:4px; display:flex; gap:15px; }
+    .btn { padding:0 10px; font-size:12px; font-weight:300; border:none; border-radius:50px; cursor:pointer; min-width:90px; background:black; color:#666; }
+    .btn.disabled { pointer-events:none; opacity:0.5; cursor:default; }
+    .active { background:#444 !important; color:white !important; border:2px solid #444 !important; }
+
+    .amount-control { background:#000; padding:4px 7px; border-radius:70px; display:flex; align-items:center; gap:5px; margin-top:15px; margin-left:-25px; margin-right:185px; }
+    .circle-btn { width:20px; height:20px; border-radius:50%; background:#444; color:white; font-size:16px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .circle-btn.disabled { background:#222; color:#555; pointer-events:none; }
+    .amount-input { background:transparent; border:none; color:#e0f7fa; font-size:17px; font-weight:700; text-align:center; width:60px; outline:none; }
+    .amount-input.disabled { color:#888; pointer-events:none; }
+
+    .quick-bet-group { display:flex; flex-direction:column; gap:5px; margin-top:10px; align-items:flex-end; margin-right:210px; position:relative; }
+    .quick-bet-row { display:flex; gap:10px; justify-content:flex-end; }
+    .quick-bet-btn { background:#111; color:#444; padding:3px 9px; border-radius:15px; font-size:12px; font-weight:700; cursor:pointer; min-width:60px; text-align:center; }
+    .quick-bet-btn.disabled { background:#111; color:#333; pointer-events:none; }
+    .quick-bet-btn.active { background:red; color:white; }
+
+    .big-bet-btn {
+      position:absolute; right:-210px; top:15%; transform:translateY(-50%);
+      width:190px; height:90px; background:#008000; border:none; border-radius:20px;
+      color:#fff; font-size:23px; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; cursor:pointer;
+      transition: all 0.3s ease;
+    }
+    .big-bet-btn.betting { background:red; }
+    .big-bet-btn.cashout { background: #FF7F00 !important; color: #ffffff !important; font-weight: 900; }
+    .big-bet-btn .bet-text { font-size:23px; font-weight:100; }
+    .big-bet-btn .waiting-text { font-size:16px; margin-top:4px; display:none; }
+    .big-bet-btn.betting .waiting-text { display:block; }
+    .big-bet-btn span { font-size:24px; margin-top:4px; display:block; }
+    .big-bet-btn.betting span, .big-bet-btn.cashout span { display:none; }
+    .big-bet-btn .profit { font-size:23px; color:#ffffff; margin-top:2px; font-weight:300; display:none; }
+    .big-bet-btn.cashout .profit { display:block; }
+  </style>
+</head>
+<body>
+
+  <div class="banner">
+    <img src="mylogo.png" alt="Logo" class="logo-img">
+    <div class="balance"><span class="amount" id="balanceAmount">100.00</span> <span class="currency">BDT</span></div>
+  </div>
+
+  <div class="history-bar">
+    <div class="history-content">
+      <div class="history-items-container" id="historyItemsContainer"></div>
+    </div>
+    <i class="fas fa-clock-rotate-left history-icon" id="historyIcon"></i>
+  </div>
+
+  <div class="history-popup" id="historyPopup">
+    <div class="popup-header">
+      <span>Crash History</span>
+      <button class="close-popup" id="closePopup">x</button>
+    </div>
+    <div class="popup-body" id="popupBody">
+      <div style="color:#666; font-size:12px;">No rounds yet</div>
+    </div>
+  </div>
+
+  <div class="space-box" id="space">
+    <img src="https://i.ibb.co.com/sctqSHM/IMG-20251109-060111.png" alt="Plane" class="plane">
+    <div class="flew-away" id="flewAway">FLEW Away!</div>
+    <div class="multiplier" id="multiplier"></div>
+    <div class="center-logo" id="ufcLogo">
+      <img src="https://i.ibb.co.com/wZ5ZQgts/unnamed-2-removebg-preview.png" alt="UFC Aviator">
+    </div>
+    <div class="loading-container">
+      <div class="loading-bar"><div class="loading-fill" id="fill"></div></div>
+      <div class="loading-text">PREPARING NEXT ROUND...</div>
+    </div>
+  </div>
+
+  <!-- Control Box 1 -->
+  <div class="control-box" id="controlBox">
+    <div class="inner-button-box">
+      <button class="btn btn-bet active" id="betBtn">Bet</button>
+      <button class="btn btn-auto" id="autoBtn">Auto</button>
+    </div>
+    <div class="amount-control">
+      <button class="circle-btn" id="decrease">-</button>
+      <input type="text" class="amount-input" id="betAmount" value="1.00" maxlength="8">
+      <button class="circle-btn" id="increase">+</button>
+    </div>
+    <div class="quick-bet-group">
+      <div class="quick-bet-row">
+        <div class="quick-bet-btn" data-value="100">100</div>
+        <div class="quick-bet-btn" data-value="200">200</div>
+      </div>
+      <div class="quick-bet-row">
+        <div class="quick-bet-btn" data-value="500">500</div>
+        <div class="quick-bet-btn" data-value="1000">1,000</div>
+      </div>
+      <button class="big-bet-btn" id="bigBetBtn">
+        <div class="bet-text">Bet</div>
+        <div class="waiting-text">Waiting for next round</div>
+        <span id="bigBetAmount">10.00 BDT</span>
+        <div class="profit" id="profitDisplay1">20.00 BDT</div>
+      </button>
+    </div>
+    <div class="underline"></div>
+    <div class="auto-options">
+      <div class="toggle-group"><span class="toggle-label">Auto bet</span>
+        <div class="toggle-switch" id="autoBetToggle"><div class="toggle-circle"></div></div>
+      </div>
+      <div class="toggle-group"><span class="toggle-label">Auto Cash Out</span>
+        <div class="toggle-switch" id="autoCashOutToggle"><div class="toggle-circle"></div></div>
+      </div>
+      <div class="cashout-box">
+        <input type="text" class="cashout-input" id="cashOutInput" value="2.00" maxlength="7" disabled>
+        <button class="close-btn" id="closeCashOut">x</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Box 2 -->
+  <div class="control-box" id="controlBox2" style="margin-top:-90px; z-index:4;">
+    <div class="inner-button-box">
+      <button class="btn btn-bet active" id="betBtn2">Bet</button>
+      <button class="btn btn-auto" id="autoBtn2">Auto</button>
+    </div>
+    <div class="amount-control">
+      <button class="circle-btn" id="decrease2">-</button>
+      <input type="text" class="amount-input" id="betAmount2" value="1.00" maxlength="8">
+      <button class="circle-btn" id="increase2">+</button>
+    </div>
+    <div class="quick-bet-group">
+      <div class="quick-bet-row">
+        <div class="quick-bet-btn" data-value="100">100</div>
+        <div class="quick-bet-btn" data-value="200">200</div>
+      </div>
+      <div class="quick-bet-row">
+        <div class="quick-bet-btn" data-value="500">500</div>
+        <div class="quick-bet-btn" data-value="1000">1,000</div>
+      </div>
+      <button class="big-bet-btn" id="bigBetBtn2">
+        <div class="bet-text">Bet</div>
+        <div class="waiting-text">Waiting for next round</div>
+        <span id="bigBetAmount2">5.00 BDT</span>
+        <div class="profit" id="profitDisplay2">10.00 BDT</div>
+      </button>
+    </div>
+    <div class="underline"></div>
+    <div class="auto-options">
+      <div class="toggle-group"><span class="toggle-label">Auto bet</span>
+        <div class="toggle-switch" id="autoBetToggle2"><div class="toggle-circle"></div></div>
+      </div>
+      <div class="toggle-group"><span class="toggle-label">Auto Cash Out</span>
+        <div class="toggle-switch" id="autoCashOutToggle2"><div class="toggle-circle"></div></div>
+      </div>
+      <div class="cashout-box">
+        <input type="text" class="cashout-input" id="cashOutInput2" value="2.00" maxlength="7" disabled>
+        <button class="close-btn" id="closeCashOut2">x</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global State
+    let balance = 100.00;
+    const balanceEl = document.getElementById('balanceAmount');
+    const multiplier = document.getElementById('multiplier');
+    const flewAway = document.getElementById('flewAway');
+    const historyItemsContainer = document.getElementById('historyItemsContainer');
+    const historyIcon = document.getElementById('historyIcon');
+    const historyPopup = document.getElementById('historyPopup');
+    const popupBody = document.getElementById('popupBody');
+    const closePopup = document.getElementById('closePopup');
+    const spaceBox = document.querySelector('.space-box');
+    const ufcLogo = document.getElementById('ufcLogo');
+    const fill = document.getElementById('fill');
+    const plane = document.querySelector('.plane');
+    let currentMultiplier = 1.00;
+    let crashHistory = [];
+    let gameInProgress = false;
+    let isLoaderActive = false;
+
+    // Box States
+    const boxes = [
+      { id: 1, reservedBet: false, betAmount: 0, profit: 0, profitEl: document.getElementById('profitDisplay1'), autoBet: false, autoCashOut: false, cashOutValue: 2.00, betPlaced: false },
+      { id: 2, reservedBet: false, betAmount: 0, profit: 0, profitEl: document.getElementById('profitDisplay2'), autoBet: false, autoCashOut: false, cashOutValue: 2.00, betPlaced: false }
+    ];
+
+    function updateBalance() { balanceEl.textContent = balance.toFixed(2); }
+
+    // Stars
+    const space = document.getElementById('space');
+    for(let i=0; i<35; i++){
+      const star = document.createElement('div'); star.classList.add('star');
+      const size = Math.random()*2 + 0.5;
+      star.style.width = star.style.height = `${size}px`;
+      star.style.left = `${Math.random()*100}%`;
+      star.style.bottom = `-${size}px`;
+      const delay = Math.random()*7; const duration = Math.random()*5 + 3.5;
+      star.style.animation = `zoomOut ${duration}s linear ${delay}s infinite`;
+      space.appendChild(star);
+    }
+
+    // Popup
+    historyIcon.addEventListener('click', () => { historyPopup.classList.add('show'); updatePopup(); });
+    closePopup.addEventListener('click', () => historyPopup.classList.remove('show'));
+    document.addEventListener('click', e => {
+      if (!historyPopup.contains(e.target) && e.target !== historyIcon && !historyIcon.contains(e.target)) {
+        historyPopup.classList.remove('show');
+      }
+    });
+
+    function updatePopup() {
+      popupBody.innerHTML = crashHistory.length === 0 ? '<div style="color:#666; font-size:12px;">No rounds yet</div>' : '';
+      crashHistory.slice().reverse().forEach(val => {
+        const item = document.createElement('div');
+        item.className = 'popup-item'; item.textContent = val + 'x';
+        const num = parseFloat(val);
+        if (num < 2) item.classList.add('low');
+        else if (num <= 10) item.classList.add('mid');
+        else item.classList.add('high');
+        popupBody.appendChild(item);
+      });
+    }
+
+    function deductReservedBets() {
+      boxes.forEach(box => {
+        if (box.reservedBet && box.betAmount <= balance) {
+          balance -= box.betAmount; updateBalance();
+          box.betPlaced = true; box.reservedBet = false;
+          disableControls(box.id, true);
+        }
+      });
+    }
+
+    function startNewRound() {
+      gameInProgress = false; currentMultiplier = 1.00;
+      multiplier.textContent = ''; multiplier.classList.remove('show');
+      flewAway.classList.remove('show');
+      spaceBox.classList.add('show-loading');
+      ufcLogo.classList.remove('hide');
+      isLoaderActive = true;
+      plane.classList.remove('visible'); plane.style.opacity = '0';
+
+      fill.style.animation = 'none'; void fill.offsetWidth;
+      fill.style.animation = 'loadingRightToLeft 5s linear forwards';
+
+      deductReservedBets();
+
+      setTimeout(() => {
+        isLoaderActive = false;
+        spaceBox.classList.remove('show-loading');
+        ufcLogo.classList.add('hide');
+
+        // Reset Plane
+        plane.style.transition = 'none';
+        plane.style.transform = 'translate(0px, 0px) rotate(0deg)';
+        void plane.offsetWidth;
+        plane.classList.add('visible');
+        plane.style.opacity = '1';
+
+        boxes.forEach(box => {
+          if (box.betPlaced) {
+            const btn = document.getElementById(`bigBetBtn${box.id === 1 ? '' : box.id}`);
+            btn.classList.remove('betting'); btn.classList.add('cashout');
+            btn.querySelector('.bet-text').textContent = 'Cash Out';
+            btn.querySelector('.profit').style.display = 'block';
+          }
+        });
+
+        requestAnimationFrame(() => {
+          multiplier.textContent = '1.00x'; multiplier.classList.add('show');
+          gameInProgress = true; startCounting();
+        });
+      }, 5000);
+    }
+
+    function resetBigBetButton(boxId) {
+      const btn = document.getElementById(`bigBetBtn${boxId === 1 ? '' : boxId}`);
+      const box = boxes.find(b => b.id === boxId);
+      btn.classList.remove('betting', 'cashout');
+      btn.querySelector('.bet-text').textContent = 'Bet';
+      btn.querySelector('.profit').style.display = 'none';
+      box.betPlaced = false; box.reservedBet = false;
+      disableControls(boxId, false);
+    }
+
+    function disableControls(boxId, disabled) {
+      const prefix = boxId === 1 ? '' : boxId;
+      document.getElementById(`decrease${prefix}`).classList.toggle('disabled', disabled);
+      document.getElementById(`increase${prefix}`).classList.toggle('disabled', disabled);
+      document.getElementById(`betAmount${prefix}`).classList.toggle('disabled', disabled);
+      document.querySelectorAll(`#controlBox${prefix} .quick-bet-btn`).forEach(b => b.classList.toggle('disabled', disabled));
+    }
+
+    function startCounting() {
+      const crashAt = (Math.random() * 4 + 1).toFixed(2);
+      let startTime = performance.now();
+      let current = 1.00;
+      let speed = 0.08; // FASTER SPEED
+      const maxSpeed = 0.18;
+      const accel = 0.0012;
+
+      const maxX = 430, maxY = 260;
+      const duration = (crashAt - 1.0) * 5000; // FASTER ANIMATION
+
+      plane.style.transition = `transform ${duration}ms cubic-bezier(0.2, 0.1, 0.2, 1)`;
+
+      const update = (now) => {
+        if (!startTime) startTime = now;
+        const elapsed = (now - startTime) / 1000;
+
+        let currentAccel = accel;
+        if (current >= 10.0) currentAccel = accel * 1.5;
+        else if (current >= 5.0) currentAccel = accel * 2.0;
+        else if (current >= 2.0) currentAccel = accel * 1.6;
+
+        speed = Math.min(speed + currentAccel * elapsed * 60, maxSpeed);
+        current = Math.min(1.00 + speed * elapsed, parseFloat(crashAt));
+        multiplier.textContent = current.toFixed(2) + 'x';
+
+        const progress = (current - 1.0) / (crashAt - 1.0);
+        const x = maxX * progress;
+        const y = -maxY * progress;
+        const rot = -25 * progress;
+        plane.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+
+        boxes.forEach(box => {
+          if (box.betPlaced && gameInProgress) {
+            box.profit = (box.betAmount * current).toFixed(2);
+            box.profitEl.textContent = box.profit + ' BDT';
+            if (box.autoCashOut && current >= box.cashOutValue && box.betPlaced) {
+              balance += parseFloat(box.profit); updateBalance(); resetBigBetButton(box.id);
+            }
+          }
+        });
+
+        if (current >= parseFloat(crashAt)) { crash(crashAt); return; }
+        requestAnimationFrame(update);
+      };
+
+      requestAnimationFrame(update);
+    }
+
+    function crash(finalValue) {
+      plane.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+      plane.style.transform = plane.style.transform + ' scale(1.8) rotate(40deg)';
+      setTimeout(() => { plane.style.opacity = '0'; }, 200);
+
+      const value = parseFloat(finalValue).toFixed(2);
+      multiplier.textContent = value + 'x'; multiplier.classList.add('crashed');
+      flewAway.classList.add('show');
+
+      crashHistory.push(value); if (crashHistory.length > 50) crashHistory.shift();
+      boxes.forEach(box => { if (box.betPlaced) resetBigBetButton(box.id); });
+
+      setTimeout(() => {
+        const span = document.createElement('span');
+        span.className = 'history-item'; span.textContent = value + 'x';
+        const num = parseFloat(value);
+        span.style.color = num < 2 ? '#00ffff' : num <= 10 ? '#c80000' : '#ff69b4';
+        historyItemsContainer.prepend(span);
+
+        requestAnimationFrame(() => {
+          const container = historyItemsContainer;
+          const items = container.children;
+          let totalWidth = 0;
+          for (let i = 0; i < items.length; i++) totalWidth += items[i].offsetWidth + 15;
+          const maxWidth = container.parentElement.offsetWidth - 40;
+          if (totalWidth > maxWidth) {
+            const shift = totalWidth - maxWidth;
+            container.style.transform = `translateX(-${shift}px)`;
+            setTimeout(() => {
+              if (container.children.length > 0) {
+                container.removeChild(container.children[container.children.length - 1]);
+                container.style.transition = 'none'; container.style.transform = 'translateX(0)';
+                void container.offsetWidth; container.style.transition = 'transform 0.4s ease';
+              }
+            }, 400);
+          }
+        });
+      }, 1200);
+
+      setTimeout(() => {
+        flewAway.classList.remove('show');
+        multiplier.classList.remove('show', 'crashed');
+        startNewRound();
+      }, 2500);
+    }
+
+    function setupBox(betBtn, autoBtn, controlBox, amountInput, decreaseBtn, increaseBtn, bigBetAmount, autoBetToggle, autoCashOutToggle, cashOutInput, closeCashOut, quickSelector, bigBetBtn, boxId) {
+      const box = boxes.find(b => b.id === boxId);
+
+      function updateBigBet() {
+        let val = parseFloat(amountInput.value) || 1;
+        val = Math.min(10000, Math.max(1, val)).toFixed(2);
+        bigBetAmount.textContent = val + ' BDT';
+      }
+
+      function reserveBet() {
+        const amt = parseFloat(amountInput.value);
+        if (amt > balance) { alert("Insufficient balance!"); return; }
+        box.betAmount = amt; box.reservedBet = true;
+        bigBetBtn.classList.add('betting'); bigBetBtn.querySelector('.bet-text').textContent = 'Cancel';
+        disableControls(boxId, true);
+
+        if (isLoaderActive && amt <= balance) {
+          balance -= amt; updateBalance(); box.betPlaced = true; box.reservedBet = false;
+        }
+      }
+
+      function cancelBet() {
+        if (box.betPlaced) { balance += box.betAmount; updateBalance(); }
+        box.reservedBet = false; box.betPlaced = false; resetBigBetButton(boxId);
+      }
+
+      function cashOut() {
+        if (!box.betPlaced || !gameInProgress) return;
+        balance += parseFloat(box.profit); updateBalance(); resetBigBetButton(box.id);
+      }
+
+      bigBetBtn.addEventListener('click', () => {
+        if (bigBetBtn.classList.contains('cashout')) cashOut();
+        else if (bigBetBtn.classList.contains('betting')) cancelBet();
+        else reserveBet();
+      });
+
+      betBtn.addEventListener('click', () => {
+        if (box.autoBet || box.autoCashOut) return;
+        betBtn.classList.add('active'); autoBtn.classList.remove('active');
+        controlBox.classList.remove('auto-mode');
+      });
+
+      autoBtn.addEventListener('click', () => {
+        autoBtn.classList.add('active'); betBtn.classList.remove('active');
+        controlBox.classList.add('auto-mode');
+      });
+
+      autoBetToggle.addEventListener('click', () => {
+        box.autoBet = !box.autoBet; autoBetToggle.classList.toggle('active', box.autoBet);
+        if (box.autoBet && !box.reservedBet && !box.betPlaced) reserveBet();
+      });
+
+      autoCashOutToggle.addEventListener('click', () => {
+        box.autoCashOut = !box.autoCashOut; autoCashOutToggle.classList.toggle('active', box.autoCashOut);
+        cashOutInput.disabled = !box.autoCashOut;
+        if (box.autoCashOut) cashOutInput.focus();
+      });
+
+      cashOutInput.addEventListener('input', () => { cashOutInput.value = cashOutInput.value.replace(/[^0-9.]/g, ''); });
+      cashOutInput.addEventListener('blur', () => {
+        let val = cashOutInput.value.trim() || '2.00';
+        if (isNaN(val) || parseFloat(val) < 1.10) val = '2.00';
+        box.cashOutValue = Math.min(1000, parseFloat(val));
+        cashOutInput.value = box.cashOutValue.toFixed(2);
+      });
+
+      closeCashOut.addEventListener('click', () => { cashOutInput.value = '2.00'; box.cashOutValue = 2.00; });
+
+      decreaseBtn.addEventListener('click', () => {
+        if (box.reservedBet || box.betPlaced) return;
+        let val = parseFloat(amountInput.value) || 0;
+        val = Math.max(1, val - 1).toFixed(2);
+        amountInput.value = val; updateBigBet();
+      });
+
+      increaseBtn.addEventListener('click', () => {
+        if (box.reservedBet || box.betPlaced) return;
+        let val = parseFloat(amountInput.value) || 0;
+        val = Math.min(10000, val + 1).toFixed(2);
+        amountInput.value = val; updateBigBet();
+      });
+
+      amountInput.addEventListener('blur', () => {
+        if (box.reservedBet || box.betPlaced) return;
+        let val = amountInput.value.trim() || '10';
+        let num = Math.min(10000, Math.max(1, parseFloat(val)));
+        amountInput.value = num.toFixed(2); updateBigBet();
+      });
+
+      amountInput.addEventListener('input', () => {
+        if (box.reservedBet || box.betPlaced) return;
+        amountInput.value = amountInput.value.replace(/[^0-9.]/g, '');
+        updateBigBet();
+      });
+
+      document.querySelectorAll(quickSelector).forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (box.reservedBet || box.betPlaced) return;
+          const numValue = parseInt(btn.dataset.value);
+          amountInput.value = numValue.toFixed(2); updateBigBet();
+          document.querySelectorAll(quickSelector).forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+
+      updateBigBet();
+    }
+
+    setupBox(
+      document.getElementById('betBtn'), document.getElementById('autoBtn'),
+      document.getElementById('controlBox'), document.getElementById('betAmount'),
+      document.getElementById('decrease'), document.getElementById('increase'),
+      document.getElementById('bigBetAmount'), document.getElementById('autoBetToggle'),
+      document.getElementById('autoCashOutToggle'), document.getElementById('cashOutInput'),
+      document.getElementById('closeCashOut'), '#controlBox .quick-bet-btn',
+      document.getElementById('bigBetBtn'), 1
+    );
+
+    setupBox(
+      document.getElementById('betBtn2'), document.getElementById('autoBtn2'),
+      document.getElementById('controlBox2'), document.getElementById('betAmount2'),
+      document.getElementById('decrease2'), document.getElementById('increase2'),
+      document.getElementById('bigBetAmount2'), document.getElementById('autoBetToggle2'),
+      document.getElementById('autoCashOutToggle2'), document.getElementById('cashOutInput2'),
+      document.getElementById('closeCashOut2'), '#controlBox2 .quick-bet-btn',
+      document.getElementById('bigBetBtn2'), 2
+    );
+
+    window.addEventListener('load', () => setTimeout(startNewRound, 300));
+    updateBalance();
+  </script>
+</body>
+</html>
