@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* আপনার সমস্ত CSS কোড এখানে আছে */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: url('https://i.ibb.co.com/tPmTJVL4/IMG-20251114-052406.jpg') center/cover no-repeat;
+            position: relative;
+        }
+
+        /* টপ ব্যানার (মূল পেজ) */
+        .top-banner {
+            position: sticky;
+            top: 0;
+            width: 370px;
+            height: 50px;
+            border-bottom: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 20px;
+            z-index: 100;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            margin: 0 auto;
+            backdrop-filter: blur(3px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .banner-title {
+            color: red;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-left:-2px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .banner-title i {
+            font-size: 1.2rem;
+            margin-top:-2px;
+            color: #0088cc;
+        }
+
+        .white-top-banner {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 370px;
+            height: 50px;
+            border-bottom: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 15px;
+            gap: 10px;
+            z-index: 1100;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            backdrop-filter: blur(3px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .back-btn {
+            font-size: 1.3rem;
+            color: #0088cc;
+            cursor: pointer;
+        }
+
+        .white-banner-title {
+            color: red;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+            margin-left: 0 !important;
+        }
+
+        .white-banner-title i {
+            font-size: 1.2rem;
+            color: #0088cc;
+        }
+
+        .content {
+            width: 370px;
+            margin: 0 auto;
+            padding: 20px 15px;
+            min-height: calc(100vh - 50px);
+        }
+        
+        .deposit-notice {
+            width: 340px;
+            margin: 8px auto;
+            padding: 12px 17px;
+            margin-left:-3.5px;
+            border: 2px solid;
+            border-radius: 12px;
+            animation: pulse 2s infinite;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #111;
+            line-height: 1.6;
+            backdrop-filter: blur(2px);
+        }
+
+        .logo-container {
+            width: 370px;
+            margin: 15px auto 0;
+            text-align: center;
+            background: none;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .logo-container img {
+            width: 350px;
+            height: 50;
+            border: none;
+            background: none;
+            box-shadow: none;
+            border-radius: 0;
+            transition: none;
+        }
+
+        .deposit-notice strong { font-size: 0.9rem; }
+
+        .warning-icon {
+            color: #ffcc00;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+            50% { box-shadow: 0 6px 25px rgba(0,0,0,0.2); }
+            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .deposit-input-container {
+            width: 340px;
+            margin: 20px auto;
+            margin-left: -4px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .deposit-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .deposit-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .deposit-input:focus {
+            border-color: #0088cc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.2);
+        }
+
+        .deposit-range {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .deposit-hint {
+            width: 340px;
+            margin-top: 10px;
+            margin-left: -3px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #111;
+            font-weight: bold;
+        }
+
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            width: 340px;
+            margin: 8px auto 15px -3px;
+        }
+
+        .amount-box {
+            width: 100%;
+            padding: 8px 5px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: black;
+            background: white;
+            border: 2px solid #7777;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .amount-box:hover {
+            background: #ffe6e6;
+            transform: scale(1.05);
+        }
+
+        .amount-box:active {
+            transform: scale(0.98);
+        }
+
+        .next-button {
+            width: 330px;
+            margin-top: 135px;
+            margin-left:0px;
+            display: block;
+            padding: 14px 5px;
+            background: linear-gradient(135deg, #0088cc, #006699);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 104, 153, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .next-button:hover {
+            background: linear-gradient(135deg, #006699, #004d73);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 104, 153, 0.4);
+        }
+
+        /* White Page */
+        .white-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.ibb.co.com/tPmTJVL4/IMG-20251114-052406.jpg') center/cover no-repeat;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 70px;
+            overflow-y: auto;
+        }
+
+        .white-page.active {
+            display: flex;
+        }
+
+        .mobile-banking-box {
+            width: 370px;
+            margin: 20px auto;
+            padding: 8px 15px;
+            background-color: #008;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-buttons-container {
+            width: 310px;
+            margin: 15px auto;
+            margin-left:27px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .logo-button {
+            flex: 1;
+            height: 80px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: zoomInOut 3s infinite ease-in-out;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .logo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            animation-play-state: paused;
+        }
+
+        .logo-button:active {
+            transform: translateY(0);
+        }
+
+        .logo-button img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .bank-selection-text {
+            width: 250px;
+            margin: 30px auto 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            padding: 9px;
+            background:blue;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid #008;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes zoomInOut {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* কালো-পিংক এবং হলুদ পেজ */
+        .black-pink-page, .yellow-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.ibb.co.com/tPmTJVL4/IMG-20251114-052406.jpg') center/cover no-repeat;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+            overflow-y: auto;
+        }
+
+        .black-pink-page.active, .yellow-page.active {
+            display: flex;
+        }
+
+        /* কালো-পিংক এবং হলুদ পেজের জন্য হেডার */
+        .page-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 370px;
+            height: 50px;
+            border-bottom: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 15px;
+            gap: 10px;
+            z-index: 2100;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+            backdrop-filter: blur(3px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .page-back-btn {
+            font-size: 1.3rem;
+            color: #0088cc;
+            cursor: pointer;
+        }
+
+        .page-title {
+            color: red;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+            margin-left: 0 !important;
+        }
+
+        /* লোগো */
+        .page-logo {
+            width: 320px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .page-logo img {
+            width: 100%;
+            max-width: 300px;
+            margin-top:-20px;
+            height: auto;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+        }
+
+        /* দ্বিতীয় লোগো */
+        .second-logo {
+            width: 140px;
+            margin: -30px;
+            text-align: center;
+        }
+
+        .second-logo img {
+            width: 100%;
+            max-width: 280px;
+            margin-right:70px;
+            height: auto;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+        }
+
+        /* লঘো বক্স - ডানে নেওয়ার জন্য */
+        .thin-white-box {
+            width: 340px;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin: 25px;
+            margin-left: auto;
+            margin-right: 3px;
+        }
+
+        /* লম্বা লাল বক্স - ডানে নেওয়ার জন্য */
+        .long-red-box {
+            width: 320px;
+            height: 590px;
+            background: #FF007F;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 10px auto;
+            margin-left: auto;
+            margin-right: 13px;
+            border: 1px solid #FF007F;
+            position: relative;
+        }
+
+        /* হলুদ পেজের জন্য হলুদ বক্স */
+        .yellow-page .long-red-box {
+            background: #eb5a15;
+            border: 1px solid #eb5a15;
+            margin-left: auto;
+            margin-right: 13px;
+        }
+
+        /* ট্রানজেকশন আইডি টেক্সট */
+        .transaction-text {
+            color: white;
+            font-size: 1.0rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        /* ট্রানজেকশন ইনপুট বক্স */
+        .transaction-input-container {
+            width: 280px;
+            margin: 10px;
+        }
+
+        .transaction-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            color: #333;
+            text-align: left;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .transaction-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .transaction-input::placeholder {
+            color: #888;
+            text-align: left;
+            text-transform: none;
+        }
+
+        /* নতুন কন্টেন্ট স্টাইল */
+        .instruction-container {
+            width: 280px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .instruction-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-top: -2px;
+        }
+
+        .instruction-text {
+            color: white;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            text-align: left;
+            flex: 1;
+        }
+
+        /* পুরো টেক্সটের নিচে আন্ডারলাইন - ৫px গ্যাপ, ডানে শিফট */
+        .full-underline-text {
+            color: white;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+            padding-bottom: 5px;
+            padding-left: 17px;
+            width: calc(100% - 15px);
+        }
+
+        .full-underline-text::after {
+            content: '';
+            position: absolute;
+            left: -17px;
+            right: 0;
+            bottom: 0;
+            height: 1.0px;
+            background-color: #0066cc;
+            border-radius: 1px;
+        }
+
+        /* নতুন "Send Money" লাইন - সার্কেল আইকন + আন্ডারলাইন */
+        .second-send-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 15px;
+            margin-right:-7px;
+            width: 280px;
+            padding-left: 15px;
+        }
+
+        .second-circle-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-right:auto;
+            margin-left:-30px;
+            margin-top: -4px;
+        }
+
+        .second-underline-text {
+            color: white;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+             margin-right:auto;
+            margin-left:-4px;
+            padding-bottom: 5px;
+            width: calc(100% - 15px);
+        }
+
+        .second-underline-text::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            margin-left:0px;
+            
+            right: 3px;
+            bottom: -8px;
+            height: 1.0px;
+            background-color: #0066cc;
+            border-radius: 1px;
+        }
+
+        .second-send-money-highlight {
+            color: yellow;
+            font-size: -25px;
+            
+            font-weight: 850;
+        }
+
+        /* নতুন যোগ করা নম্বর লাইনের স্টাইল */
+        .number-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 15px;
+            margin-right:-7px;
+            width: 280px;
+            padding-left: 15px;
+        }
+
+        .number-circle-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-right:auto;
+            margin-left:-30px;
+            margin-top: -1px;
+        }
+
+        .number-underline-text {
+            color: White;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+            margin-right:auto;
+            margin-left:-4px;
+            padding-bottom: 5px;
+            width: calc(100% - 15px);
+        }
+
+        .number-underline-text::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            margin-left:0px;
+            right: 3px;
+            bottom: -8px;
+            height: 1.0px;
+            background-color: #0066cc;
+            border-radius: 1px;
+        }
+
+        /* নাম্বার স্টাইল - মোটা এবং হলুদ */
+        .yellow-number {
+            color: yellow;
+            font-weight: 900;
+            font-size: 0.95rem;
+        }
+
+        /* কালো বক্স স্টাইল - আপডেট করা */
+        .black-box {
+            display: flex;
+            align-items: center;
+            background-color: #AA336A;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 7px 5px;
+            border-radius: 4px;
+            margin-top:-20px;
+            margin-left: 100px;
+            vertical-align: middle;
+            width: 30%;
+            height: 25px;
+            justify-content: space-between;
+        }
+
+        /* হলুদ পেজের কালো বক্সের ব্যাকগ্রাউন্ড হলুদ */
+        .yellow-page .black-box {
+            background-color: #eb5;
+        }
+
+        .copy-icon {
+            color: white;
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+
+        .copy-text {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .amount-display {
+            color: #555;
+            font-weight: 750;
+            font-size:18px;
+            margin-right: 10px;
+        }
+
+        .amount-text {
+            flex: 1;
+            text-align: right;
+            font-size: 0.9rem;
+            color: ;
+        }
+
+        /* টাকার পরিমাণ লাইন স্টাইল */
+        .amount-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 15px;
+            margin-right:-7px;
+            width: 280px;
+            padding-left: 15px;
+        }
+
+        .amount-circle-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-right:auto;
+            margin-left:-30px;
+            margin-top: -1px;
+        }
+
+        .amount-underline-text {
+            color: White;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+            margin-right:auto;
+            margin-left:-4px;
+            padding-bottom: 5px;
+            width: calc(100% - 15px);
+        }
+
+        .amount-underline-text::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            margin-left:0px;
+            right: 3px;
+            bottom: -8px;
+            height: 1.0px;
+            background-color: #0066cc;
+            border-radius: 1px;
+        }
+
+        /* নতুন পিন লাইন স্টাইল */
+        .pin-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 15px;
+            margin-right:-7px;
+            width: 280px;
+            padding-left: 15px;
+        }
+
+        .pin-circle-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-right:auto;
+            margin-left:-30px;
+            margin-top: -1px;
+        }
+
+        .pin-underline-text {
+            color: White;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+            margin-right:auto;
+            margin-left:-4px;
+            padding-bottom: 5px;
+            width: calc(100% - 15px);
+        }
+
+        .pin-underline-text::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            margin-left:0px;
+            right: 3px;
+            bottom: -8px;
+            height: 1.0px;
+            background-color: #0066cc;
+            border-radius: 1px;
+        }
+
+        /* নতুন নিশ্চিতকরণ বার্তা লাইন স্টাইল */
+        .confirmation-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 15px;
+            margin-right:-7px;
+            width: 280px;
+            padding-left: 15px;
+        }
+
+        .confirmation-circle-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-right:auto;
+            margin-left:-30px;
+            margin-top: -1px;
+        }
+
+        .confirmation-underline-text {
+            color: White;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+            margin-right:auto;
+            margin-left:-1px;
+            padding-bottom: 5px;
+            width: calc(100% - 15px);
+        }
+
+        .confirmation-underline-text::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            margin-left:0px;
+            right: 3px;
+            bottom: -8px;
+            height: 1.0px;
+            background-color: #0066cc;
+            border-radius: 1px;
+        }
+
+        /* নতুন যোগ করা ট্রানজেকশন আইডি লাইন স্টাইল */
+        .transaction-id-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 15px;
+            margin-right:-7px;
+            width: 280px;
+            padding-left: 15px;
+        }
+
+        .transaction-id-circle-icon {
+            color: white;
+            font-size: 0.3rem;
+            margin-right:auto;
+            margin-left:-30px;
+            margin-top: -1px;
+        }
+
+        .transaction-id-underline-text {
+            color: White;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            display: block;
+            margin-right:auto;
+            margin-left:-4px;
+            padding-bottom: 5px;
+            width: calc(100% - 15px);
+        }
+
+        .transaction-id-highlight {
+            color: yellow;
+            font-weight: 850;
+        }
+
+        .verify-highlight {
+            color: yellow;
+            font-weight: 850;
+        }
+
+        .amount-banner {
+            width: 380px;
+            height: 50px;
+            background-color: #cde1ff;
+            margin-top: 160px;
+            margin-left:1px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0057D0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        /* কপি নোটিফিকেশন ব্যানার - ডান পাশ থেকে আসবে */
+        .copy-notification {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 9px 70px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 3000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .copy-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup {
+            background-color: white;
+            width: 300px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .popup-overlay.active .popup {
+            transform: scale(1);
+        }
+
+        .popup-icon {
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .popup-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .popup-message {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .popup-button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .popup-button:hover {
+            background-color: #006699;
+        }
+
+        button, .logo-button, .amount-box, .back-btn {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        /* স্ক্রলেবল কন্টেন্ট এরিয়া */
+        .scrollable-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: -120px;
+        }
+
+        /* স্ক্রলবার স্টাইল - হালকা করা */
+        .black-pink-page::-webkit-scrollbar,
+        .yellow-page::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .black-pink-page::-webkit-scrollbar-track,
+        .yellow-page::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .black-pink-page::-webkit-scrollbar-thumb,
+        .yellow-page::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .black-pink-page::-webkit-scrollbar-thumb:hover,
+        .yellow-page::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* নতুন VERIFY বাটন স্টাইল */
+        .verify-button {
+            width: 320px;
+            height: 50px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            font-weight: 950;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .verify-button:hover {
+            background-color: #CC0000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .verify-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- কপি নোটিফিকেশন ব্যানার -->
+    <div class="copy-notification" id="copyNotification">Copied!</div>
+
+    <!-- মূল টপ ব্যানার -->
+    <div class="top-banner">
+        <div class="banner-title">
+            <i class="fas fa-wallet"></i> ডিপোজিট পরিমাণ~
+        </div>
+    </div>
+
+    <!-- কন্টেন্ট -->
+    <div class="content">
+        <div class="deposit-notice">
+            <span class="warning-icon">⚠️⚠️⚠️</span><span class="warning-icon"></span>!!!Note: 
+            অনুগ্রহ করে আপনার ডিপোজিট করার পরে অবশ্যই আপনার 
+            <strong>transection(ট্রানজেকশন) আইডি সাবমিট করবেন!</strong> 
+            তাহলে খুব দ্রুত আপনার একাউন্টর মধ্যে টাকা যোগ হয়ে যাবে।।
+            <span class="warning-icon"></span><span class="warning-icon">⚠️⚠️⚠️</span>
+        </div>
+        
+        <div class="deposit-input-container">
+            <label class="deposit-label" for="depositAmount">**ডিপোজিটের পরিমাণ লিখুন:</label>
+            <input type="number" id="depositAmount" class="deposit-input" placeholder="৳ ১০০-২০,০০০" min="100" max="20000">
+            <div class="deposit-range">~সর্বনিম্ন ১০০৳ & সর্বোচ্চ ২০,০০০৳~</div>
+        </div>
+
+        <div class="deposit-hint"><strong>**Deposit Ammounts:</strong></div>
+        
+        <div class="amount-grid">
+            <div class="amount-box" data-value="100">100</div>
+            <div class="amount-box" data-value="200">200</div>
+            <div class="amount-box" data-value="500">500</div>
+            <div class="amount-box" data-value="1000">1,000</div>
+            <div class="amount-box" data-value="3000">3,000</div>
+            <div class="amount-box" data-value="5000">5,000</div>
+            <div class="amount-box" data-value="7000">7,000</div>
+            <div class="amount-box" data-value="10000">10,000</div>
+            <div class="amount-box" data-value="15000">15,000</div>
+            <div class="amount-box" data-value="20000">20,000</div>
+        </div>
+
+        <button class="next-button" id="nextButton">
+            <i class="fas fa-arrow-right"></i> Next
+        </button>
+    </div>
+
+    <!-- White Page -->
+    <div class="white-page" id="whitePage">
+        <div class="white-top-banner">
+            <div class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="white-banner-title">
+                <i class=""></i> Deposit Method~
+            </div>
+        </div>
+        <div class="logo-container">
+            <img src="https://i.ibb.co.com/rRn3gMJ9/IMG-20251114-190008-removebg-preview.png" alt="Your Logo">
+        </div>
+        
+        <div class="mobile-banking-box">
+            মোবাইল ব্যাংকিং
+        </div>
+        
+        <div class="logo-buttons-container">
+            <div class="logo-button" id="blackPinkBtn">
+                <img src="https://i.ibb.co.com/0pq3JY1d/bkash.png" alt="বাম লোগো">
+            </div>
+            <div class="logo-button" id="yellowBtn">
+                <img src="https://i.ibb.co.com/DH1r65SQ/nagad.png" alt="ডান লোগো">
+            </div>
+        </div>
+        
+        <div class="bank-selection-text">
+            আপনার ব্যাংক নির্বাচন করুন
+        </div>
+        
+        <div class="amount-banner" id="amountBanner">
+            পরিমান 0.00 BDT
+        </div>
+    </div>
+
+    <!-- কালো-পিংক পেজ (bKash) -->
+    <div class="black-pink-page" id="blackPinkPage">
+        <div class="page-header">
+            <div class="page-back-btn" id="blackPinkBackBtn">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="page-title">
+                <i class=""></i> bKash Payment
+            </div>
+        </div>
+        
+        <div class="scrollable-content">
+            <div class="page-logo">
+                <img src="https://i.ibb.co.com/rRn3gMJ9/IMG-20251114-190008-removebg-preview.png" alt="Logo">
+            </div>
+            
+            <div class="second-logo">
+                <img src="https://i.ibb.co.com/0pq3JY1d/bkash.png" alt="Second Logo">
+            </div>
+            
+            <div class="thin-white-box">
+                <span class="amount-display" id="bkashAmount">৳ 0.00</span>
+                <span class="amount-text">ডিপোজিট পরিমাণ</span>
+            </div>
+
+            <div class="long-red-box">
+                <div class="transaction-text">
+                    ট্রানজেকশন আইডি দিন
+                </div>
+                
+                <div class="transaction-input-container">
+                    <input type="text" class="transaction-input" id="bkashTransactionId" placeholder="ট্রানজেকশন আইডি লিখুন">
+                </div>
+
+                <div class="instruction-container">
+                    <div class="instruction-icon">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="instruction-text">
+                        <span class="full-underline-text">*247# ডায়াল করে আপনার bKash মোবাইল মেনুতে যান অথবা bKash অ্যাপে যান।</span>
+                        
+
+
+                        <div class="second-send-line">
+                            <div class="second-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="second-underline-text">
+                                <span class="second-send-money-highlight">"Send Money"</span> -এ ক্লিক করুন।
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা নম্বর লাইন -->
+                        <div class="number-line">
+                            <div class="number-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="number-underline-text">
+                                প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুনঃ<br>
+                                <span class="yellow-number">01940864095</span>
+                                <div class="black-box">
+                                    <i class="fa-solid fa-copy copy-icon"></i>
+                                    <span class="copy-text">COPY</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা টাকার পরিমাণ লাইন -->
+                        <div class="amount-line">
+                            <div class="amount-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="amount-underline-text">
+                                টাকার পরিমাণঃ <span class="yellow-number" id="bkashAmountText">00</span>
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা পিন লাইন -->
+                        <div class="pin-line">
+                            <div class="pin-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="pin-underline-text">
+                                নিশ্চিত করতে এখন আপনার bKash মোবাইল মেনু পিন লিখুন।
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা নিশ্চিতকরণ বার্তা লাইন -->
+                        <div class="confirmation-line">
+                            <div class="confirmation-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="confirmation-underline-text">
+                                সবকিছু ঠিক থাকলে, আপনি bKash থেকে একটি নিশ্চিতকরণ বার্তা পাবেন।
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা ট্রানজেকশন আইডি লাইন -->
+                        <div class="transaction-id-line">
+                            <div class="transaction-id-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="transaction-id-underline-text">
+                                এখন উপরের বক্সে আপনার <span class="transaction-id-highlight">Transaction ID</span> দিন এবং নিচের <span class="verify-highlight">VERIFY</span> বাটনে ক্লিক করুন।
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VERIFY বাটন -->
+            <button class="verify-button" id="bkashVerifyButton">
+                VERIFY
+            </button>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- হলুদ পেজ (Nagad) -->
+    <div class="yellow-page" id="yellowPage">
+        <div class="page-header">
+            <div class="page-back-btn" id="yellowBackBtn">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="page-title">
+                <i class=""></i> Nagad Payment
+            </div>
+        </div>
+        
+        <div class="scrollable-content">
+            <div class="page-logo">
+                <img src="https://i.ibb.co.com/rRn3gMJ9/IMG-20251114-190008-removebg-preview.png" alt="Logo">
+            </div>
+            
+            <div class="second-logo">
+                <img src="https://i.ibb.co.com/DH1r65SQ/nagad.png" alt="Second Logo">
+            </div>
+            
+            <div class="thin-white-box">
+                <span class="amount-display" id="nagadAmount">৳ 0.00</span>
+                <span class="amount-text">ডিপোজিট পরিমাণ</span>
+            </div>
+
+            <div class="long-red-box">
+                <div class="transaction-text">
+                    ট্রানজেকশন আইডি দিন
+                </div>
+                
+                <div class="transaction-input-container">
+                    <input type="text" class="transaction-input" id="nagadTransactionId" placeholder="ট্রানজেকশন আইডি লিখুন">
+                </div>
+
+                <div class="instruction-container">
+                    <div class="instruction-icon">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="instruction-text">
+                        <span class="full-underline-text">*167# ডায়াল করে আপনার Nagad মোবাইল মেনুতে যান অথবা Nagad অ্যাপে যান।</span>
+                       
+
+                        <div class="second-send-line">
+                            <div class="second-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="second-underline-text">
+                                <span class="second-send-money-highlight">"Send Money"</span> -এ ক্লিক করুন।
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা নম্বর লাইন -->
+                        <div class="number-line">
+                            <div class="number-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="number-underline-text">
+                                প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুনঃ<br>
+                                <span class="yellow-number">01322249829</span>
+                                <div class="black-box">
+                                    <i class="fa-solid fa-copy copy-icon"></i>
+                                    <span class="copy-text">COPY</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা টাকার পরিমাণ লাইন -->
+                        <div class="amount-line">
+                            <div class="amount-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="amount-underline-text">
+                                টাকার পরিমাণঃ <span class="yellow-number" id="nagadAmountText">00</span>
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা পিন লাইন -->
+                        <div class="pin-line">
+                            <div class="pin-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="pin-underline-text">
+                                নিশ্চিত করতে এখন আপনার Nagad মোবাইল মেনু পিন লিখুন।
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা নিশ্চিতকরণ বার্তা লাইন -->
+                        <div class="confirmation-line">
+                            <div class="confirmation-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="confirmation-underline-text">
+                                সবকিছু ঠিক থাকলে, আপনি Nagad থেকে একটি নিশ্চিতকরণ বার্তা পাবেন।
+                            </div>
+                        </div>
+
+                        <!-- নতুন যোগ করা ট্রানজেকশন আইডি লাইন -->
+                        <div class="transaction-id-line">
+                            <div class="transaction-id-circle-icon">
+                                <i class="fa fa-circle" aria-hidden="true"></i>
+                            </div>
+                            <div class="transaction-id-underline-text">
+                                এখন উপরের বক্সে আপনার <span class="transaction-id-highlight">Transaction ID</span> দিন এবং নিচের <span class="verify-highlight">VERIFY</span> বাটনে ক্লিক করুন।
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VERIFY বাটন -->
+            <button class="verify-button" id="nagadVerifyButton">
+                VERIFY
+            </button>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- পপআপ -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <div class="popup-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="popup-title" id="popupTitle">টাইটেল</div>
+            <div class="popup-message" id="popupMessage">মেসেজ এখানে দেখানো হবে</div>
+            <button class="popup-button" id="popupButton">ঠিক আছে</button>
+        </div>
+    </div>
+
+<script>
+    const depositInput = document.getElementById('depositAmount');
+    const nextButton = document.getElementById('nextButton');
+    const whitePage = document.getElementById('whitePage');
+    const amountBanner = document.getElementById('amountBanner');
+    const backBtn = document.getElementById('backBtn');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupMessage = document.getElementById('popupMessage');
+    const popupButton = document.getElementById('popupButton');
+    const copyNotification = document.getElementById('copyNotification');
+
+    const blackPinkBtn = document.getElementById('blackPinkBtn');
+    const yellowBtn = document.getElementById('yellowBtn');
+    const blackPinkPage = document.getElementById('blackPinkPage');
+    const yellowPage = document.getElementById('yellowPage');
+    const bkashAmount = document.getElementById('bkashAmount');
+    const nagadAmount = document.getElementById('nagadAmount');
+    const bkashAmountText = document.getElementById('bkashAmountText');
+    const nagadAmountText = document.getElementById('nagadAmountText');
+    
+    const blackPinkBackBtn = document.getElementById('blackPinkBackBtn');
+    const yellowBackBtn = document.getElementById('yellowBackBtn');
+
+    const bkashTransactionId = document.getElementById('bkashTransactionId');
+    const nagadTransactionId = document.getElementById('nagadTransactionId');
+
+    const bkashVerifyButton = document.getElementById('bkashVerifyButton');
+    const nagadVerifyButton = document.getElementById('nagadVerifyButton');
+
+    let currentAmount = 0;
+
+    // TRX ID ইনপুটগুলোর জন্য অটো ক্যাপিটাল ফাংশন
+    function setupAutoCapitalInputs() {
+        const transactionInputs = [
+            document.getElementById('bkashTransactionId'),
+            document.getElementById('nagadTransactionId')
+        ];
+
+        transactionInputs.forEach(input => {
+            if (input) {
+                // ইনপুটের সময় অটো ক্যাপিটাল
+                input.addEventListener('input', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+
+                // কপি-পেস্ট করলেও অটো ক্যাপিটাল
+                input.addEventListener('paste', function(e) {
+                    setTimeout(() => {
+                        this.value = this.value.toUpperCase();
+                    }, 0);
+                });
+
+                // কীবোর্ড থেকে লিখলেও অটো ক্যাপিটাল
+                input.addEventListener('keyup', function(e) {
+                    this.value = this.value.toUpperCase();
+                });
+            }
+        });
+    }
+
+    document.querySelectorAll('.amount-box').forEach(box => {
+        box.addEventListener('click', () => {
+            depositInput.value = box.getAttribute('data-value');
+        });
+    });
+
+    function handleNextButtonClick() {
+        const amount = parseFloat(depositInput.value) || 0;
+
+        if (!depositInput.value || isNaN(amount)) {
+            showPopup("ডিপোজিট পরিমাণ লিখুন", "অনুগ্রহ করে ডিপোজিটের পরিমাণ লিখুন।");
+            return;
+        }
+        if (amount < 100) {
+            showPopup("সর্বনিম্ন ডিপোজিট", "সর্বনিম্ন ১০০৳ ডিপোজিট করতে পারবেন।");
+            return;
+        }
+        if (amount > 20000) {
+            showPopup("সর্বোচ্চ ডিপোজিট", "সর্বোচ্চ ২০,০০০৳ ডিপোজিট করতে পারবেন।");
+            return;
+        }
+
+        currentAmount = amount;
+        amountBanner.textContent = `পরিমান ${amount.toFixed(2)} BDT`;
+        whitePage.classList.add('active');
+    }
+
+    backBtn.addEventListener('click', () => {
+        whitePage.classList.remove('active');
+        blackPinkPage.classList.remove('active');
+        yellowPage.classList.remove('active');
+        depositInput.value = "";
+        amountBanner.textContent = "পরিমান 0.00 BDT";
+        depositInput.focus();
+    });
+
+    blackPinkBackBtn.addEventListener('click', () => {
+        blackPinkPage.classList.remove('active');
+    });
+
+    yellowBackBtn.addEventListener('click', () => {
+        yellowPage.classList.remove('active');
+    });
+
+    blackPinkBtn.addEventListener('click', () => {
+        bkashAmount.textContent = `৳ ${currentAmount.toFixed(2)}`;
+        bkashAmountText.textContent = currentAmount.toFixed(2);
+        blackPinkPage.classList.add('active');
+    });
+
+    yellowBtn.addEventListener('click', () => {
+        nagadAmount.textContent = `৳ ${currentAmount.toFixed(2)}`;
+        nagadAmountText.textContent = currentAmount.toFixed(2);
+        yellowPage.classList.add('active');
+    });
+
+    // পপআপ ফাংশন - সংশোধিত
+    function showPopup(title, message, targetPage = null) {
+        popupTitle.textContent = title;
+        popupMessage.textContent = message;
+        
+        // পপআপকে সংশ্লিষ্ট পেইজে দেখানোর জন্য z-index সেট করা
+        if (targetPage === 'blackPinkPage') {
+            popupOverlay.style.zIndex = '2500'; // bKash পেইজের উপরে
+        } else if (targetPage === 'yellowPage') {
+            popupOverlay.style.zIndex = '2500'; // Nagad পেইজের উপরে
+        } else {
+            popupOverlay.style.zIndex = '1200'; // ডিফল্ট
+        }
+        
+        popupOverlay.classList.add('active');
+    }
+
+    function closePopup() {
+        popupOverlay.classList.remove('active');
+        // পপআপ বন্ধ করার পর বর্তমান পেইজে ফোকাস রাখা
+        if (blackPinkPage.classList.contains('active')) {
+            bkashTransactionId.focus();
+        } else if (yellowPage.classList.contains('active')) {
+            nagadTransactionId.focus();
+        } else {
+            depositInput.focus();
+        }
+    }
+
+    // কপি নোটিফিকেশন ফাংশন - ডান পাশ থেকে আসবে
+    function showCopyNotification() {
+        copyNotification.classList.add('show');
+        setTimeout(() => {
+            copyNotification.classList.remove('show');
+        }, 2000);
+    }
+
+    // VERIFY বাটন ফাংশন - সংশোধিত
+    function handleVerifyButtonClick(transactionIdInput, paymentMethod, pageType) {
+        const transactionId = transactionIdInput.value.trim();
+        
+        if (!transactionId) {
+            showPopup("ট্রানজেকশন আইডি লিখুন", `অনুগ্রহ করে ${paymentMethod} ট্রানজেকশন আইডি লিখুন।`, pageType);
+            return;
+        }
+        
+        showPopup("পেমেন্ট ভেরিফাই হচ্ছে", `অনুগ্রহ করে কিচ্ছুক্ষণ অপেক্ষা করুন,, ${paymentMethod} ট্রানজেকশন আইডিটি যাচাইকরণ হলে কয়েক মিনিটের মধ্যে আপনার একাউন্ট ব্যালেন্সে "টাকা" সফলভাবে যোগ হয়ে যাবে,ধন্যবাদ।।।`, pageType);
+        transactionIdInput.value = "";
+    }
+
+    depositInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') handleNextButtonClick();
+    });
+
+    nextButton.addEventListener('click', handleNextButtonClick);
+    popupButton.addEventListener('click', closePopup);
+    popupOverlay.addEventListener('click', e => {
+        if (e.target === popupOverlay) closePopup();
+    });
+
+    // VERIFY বাটন ইভেন্ট লিসেনার - সংশোধিত
+    bkashVerifyButton.addEventListener('click', () => {
+        handleVerifyButtonClick(bkashTransactionId, "bKash", "blackPinkPage");
+    });
+
+    nagadVerifyButton.addEventListener('click', () => {
+        handleVerifyButtonClick(nagadTransactionId, "Nagad", "yellowPage");
+    });
+
+    function handleBackButton(e) {
+        if (yellowPage.classList.contains('active')) {
+            yellowPage.classList.remove('active');
+            e.preventDefault();
+        } else if (blackPinkPage.classList.contains('active')) {
+            blackPinkPage.classList.remove('active');
+            e.preventDefault();
+        } else if (whitePage.classList.contains('active')) {
+            whitePage.classList.remove('active');
+            e.preventDefault();
+        }
+    }
+
+    window.addEventListener('popstate', function(event) {
+        handleBackButton(event);
+    });
+
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            if (yellowPage.classList.contains('active') || 
+                blackPinkPage.classList.contains('active') || 
+                whitePage.classList.contains('active')) {
+                history.pushState({page: 'active'}, '');
+            }
+        }
+    });
+
+    window.addEventListener('load', function() {
+        history.replaceState({page: 'main'}, '');
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    if (yellowPage.classList.contains('active') || 
+                        blackPinkPage.classList.contains('active') || 
+                        whitePage.classList.contains('active')) {
+                        history.pushState({page: 'active'}, '');
+                    }
+                }
+            });
+        });
+
+        observer.observe(yellowPage, { attributes: true });
+        observer.observe(blackPinkPage, { attributes: true });
+        observer.observe(whitePage, { attributes: true });
+
+        // অটো ক্যাপিটাল সেটআপ কল করুন
+        setupAutoCapitalInputs();
+    });
+
+    // কপি ফাংশন যোগ করা হয়েছে - এখন নোটিফিকেশন দেখাবে
+    document.querySelectorAll('.black-box').forEach(box => {
+        box.addEventListener('click', function() {
+            const phoneNumber = this.parentElement.querySelector('.yellow-number').textContent;
+            navigator.clipboard.writeText(phoneNumber).then(() => {
+                showCopyNotification();
+            }).catch(err => {
+                console.error('কপি করতে সমস্যা হয়েছে: ', err);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
